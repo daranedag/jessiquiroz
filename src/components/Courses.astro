@@ -58,16 +58,16 @@
   const carousel = document.querySelector("[data-carousel]");
 
   if (carousel) {
-    const track = carousel.querySelector("[data-carousel-track]");
-    const prevButton = carousel.querySelector("[data-carousel-prev]");
-    const nextButton = carousel.querySelector("[data-carousel-next]");
+    const track = carousel.querySelector<HTMLElement>("[data-carousel-track]");
+    const prevButton = carousel.querySelector<HTMLButtonElement>("[data-carousel-prev]");
+    const nextButton = carousel.querySelector<HTMLButtonElement>("[data-carousel-next]");
 
     if (track) {
-      const originals = Array.from(track.querySelectorAll("[data-carousel-item]"));
+      const originals = Array.from(track.querySelectorAll<HTMLElement>("[data-carousel-item]"));
 
       if (originals.length > 1) {
-        const headClones = originals.map((item) => item.cloneNode(true));
-        const tailClones = originals.map((item) => item.cloneNode(true));
+        const headClones = originals.map((item) => item.cloneNode(true) as HTMLElement);
+        const tailClones = originals.map((item) => item.cloneNode(true) as HTMLElement);
 
         headClones.reverse().forEach((clone) => {
           clone.setAttribute("data-clone", "true");
@@ -87,7 +87,7 @@
         const getGap = () => parseFloat(getComputedStyle(track).gap || "0");
         const getItemWidth = () => originals[0].offsetWidth;
 
-        const moveTo = (nextIndex, { animate = true } = {}) => {
+        const moveTo = (nextIndex: number, { animate = true }: { animate?: boolean } = {}) => {
           const gap = getGap();
           const width = getItemWidth();
           track.style.transition = animate ? "transform 700ms ease-in-out" : "none";

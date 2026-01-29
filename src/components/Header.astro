@@ -6,10 +6,22 @@
       <span class="font-display text-xl font-semibold tracking-wide text-primary">SERENITY</span>
     </a>
     <nav class="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.2em] text-text-main lg:flex">
-      <a class="hover:text-primary transition-colors" href="#cronologia">Cronología</a>
-      <a class="hover:text-primary transition-colors" href="#cursos">Cursos</a>
-      <a class="hover:text-primary transition-colors" href="#nociones">Nociones</a>
-      <a class="hover:text-primary transition-colors" href="#experiencias">Experiencias</a>
+      <div class="relative group">
+        <button
+          type="button"
+          class="flex items-center gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-text-main hover:text-primary transition-colors"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Sobre mí
+          <span class="material-icons text-base">expand_more</span>
+        </button>
+        <div class="invisible absolute left-0 top-full mt-3 w-56 rounded-2xl border border-primary/10 bg-white p-3 text-xs font-semibold uppercase tracking-[0.2em] text-text-main opacity-0 shadow-xl transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+          <a class="block rounded-lg px-3 py-2 hover:bg-background-alt/50 hover:text-primary" href="#cursos">Cursos</a>
+          <a class="block rounded-lg px-3 py-2 hover:bg-background-alt/50 hover:text-primary" href="#nociones">Nociones</a>
+          <a class="block rounded-lg px-3 py-2 hover:bg-background-alt/50 hover:text-primary" href="#experiencias">Experiencias</a>
+        </div>
+      </div>
       <a class="hover:text-primary transition-colors" href="#rejuvenecimiento">Rejuvenecimiento</a>
       <a class="hover:text-primary transition-colors" href="#testimonios">Testimonios</a>
       <a class="hover:text-primary transition-colors" href="#reflexiones">Reflexiones</a>
@@ -27,10 +39,21 @@
   </div>
   <div id="mobile-menu" class="hidden border-t border-primary/10 bg-background/95 lg:hidden" data-menu>
     <nav class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 text-xs font-semibold uppercase tracking-[0.2em] text-text-main">
-      <a class="hover:text-primary transition-colors" href="#cronologia">Cronología</a>
-      <a class="hover:text-primary transition-colors" href="#cursos">Cursos</a>
-      <a class="hover:text-primary transition-colors" href="#nociones">Nociones</a>
-      <a class="hover:text-primary transition-colors" href="#experiencias">Experiencias</a>
+      <button
+        class="flex items-center justify-between rounded-full border border-primary/20 px-4 py-2 text-left text-xs font-semibold uppercase tracking-[0.2em] text-primary"
+        type="button"
+        aria-expanded="false"
+        aria-controls="about-menu"
+        data-about-toggle
+      >
+        Sobre mí
+        <span class="material-icons text-base">expand_more</span>
+      </button>
+      <div id="about-menu" class="hidden flex-col gap-3 pl-4" data-about-menu>
+        <a class="hover:text-primary transition-colors" href="#cursos">Cursos</a>
+        <a class="hover:text-primary transition-colors" href="#nociones">Nociones</a>
+        <a class="hover:text-primary transition-colors" href="#experiencias">Experiencias</a>
+      </div>
       <a class="hover:text-primary transition-colors" href="#rejuvenecimiento">Rejuvenecimiento</a>
       <a class="hover:text-primary transition-colors" href="#testimonios">Testimonios</a>
       <a class="hover:text-primary transition-colors" href="#reflexiones">Reflexiones</a>
@@ -42,6 +65,8 @@
 <script>
   const menuToggle = document.querySelector("[data-menu-toggle]");
   const menu = document.querySelector("[data-menu]");
+  const aboutToggle = document.querySelector("[data-about-toggle]");
+  const aboutMenu = document.querySelector("[data-about-menu]");
 
   if (menuToggle && menu) {
     menuToggle.addEventListener("click", () => {
@@ -54,7 +79,20 @@
       link.addEventListener("click", () => {
         menu.classList.add("hidden");
         menuToggle.setAttribute("aria-expanded", "false");
+        if (aboutMenu && aboutToggle) {
+          aboutMenu.classList.add("hidden");
+          aboutToggle.setAttribute("aria-expanded", "false");
+        }
       });
+    });
+  }
+
+  if (aboutToggle && aboutMenu) {
+    aboutToggle.addEventListener("click", () => {
+      const isOpen = !aboutMenu.classList.contains("hidden");
+      aboutMenu.classList.toggle("hidden");
+      aboutMenu.classList.toggle("flex");
+      aboutToggle.setAttribute("aria-expanded", String(!isOpen));
     });
   }
 </script>
