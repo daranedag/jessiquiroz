@@ -1,0 +1,60 @@
+<header class="fixed inset-x-0 top-0 z-50 border-b border-primary/10 bg-background/80 backdrop-blur">
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
+    <a href="#inicio" class="flex items-center gap-3">
+      <img src="/logo_color.png" alt="Logo Serenity" class="h-10 w-auto dark:hidden" />
+      <img src="/logo_blanco.png" alt="Logo Serenity" class="hidden h-10 w-auto dark:block" />
+      <span class="font-display text-xl font-semibold tracking-wide text-primary">SERENITY</span>
+    </a>
+    <nav class="hidden items-center gap-8 text-xs font-semibold uppercase tracking-[0.2em] text-text-main lg:flex">
+      <a class="hover:text-primary transition-colors" href="#cronologia">Cronología</a>
+      <a class="hover:text-primary transition-colors" href="#cursos">Cursos</a>
+      <a class="hover:text-primary transition-colors" href="#nociones">Nociones</a>
+      <a class="hover:text-primary transition-colors" href="#experiencias">Experiencias</a>
+      <a class="hover:text-primary transition-colors" href="#rejuvenecimiento">Rejuvenecimiento</a>
+      <a class="hover:text-primary transition-colors" href="#testimonios">Testimonios</a>
+      <a class="hover:text-primary transition-colors" href="#reflexiones">Reflexiones</a>
+      <a class="rounded-full bg-primary px-5 py-2 text-white shadow-sm transition hover:shadow-md" href="#contacto">Reservar</a>
+    </nav>
+    <button
+      class="flex items-center justify-center rounded-full border border-primary px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-primary lg:hidden"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span class="material-icons text-primary">menu</span>
+    </button>
+  </div>
+  <div id="mobile-menu" class="hidden border-t border-primary/10 bg-background/95 lg:hidden" data-menu>
+    <nav class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 text-xs font-semibold uppercase tracking-[0.2em] text-text-main">
+      <a class="hover:text-primary transition-colors" href="#cronologia">Cronología</a>
+      <a class="hover:text-primary transition-colors" href="#cursos">Cursos</a>
+      <a class="hover:text-primary transition-colors" href="#nociones">Nociones</a>
+      <a class="hover:text-primary transition-colors" href="#experiencias">Experiencias</a>
+      <a class="hover:text-primary transition-colors" href="#rejuvenecimiento">Rejuvenecimiento</a>
+      <a class="hover:text-primary transition-colors" href="#testimonios">Testimonios</a>
+      <a class="hover:text-primary transition-colors" href="#reflexiones">Reflexiones</a>
+      <a class="rounded-full bg-primary px-5 py-2 text-center text-white shadow-sm transition hover:shadow-md" href="#contacto">Reservar</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const menuToggle = document.querySelector("[data-menu-toggle]");
+  const menu = document.querySelector("[data-menu]");
+
+  if (menuToggle && menu) {
+    menuToggle.addEventListener("click", () => {
+      const isOpen = !menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        menu.classList.add("hidden");
+        menuToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+</script>

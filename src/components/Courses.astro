@@ -1,0 +1,154 @@
+<section id="cursos" class="py-24">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-secondary">Cursos y talleres realizados</p>
+        <h2 class="font-display text-3xl text-text-main sm:text-4xl">Formación continua</h2>
+        <p class="mt-3 text-sm text-slate-600">Trayectoria de aprendizajes que respaldan la práctica terapéutica.</p>
+      </div>
+    </div>
+    <div class="relative mt-12 overflow-hidden" data-carousel>
+      <div class="flex gap-8" data-carousel-track>
+        <article class="w-full shrink-0 rounded-3xl border border-primary/10 bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Certificación</span>
+            <span class="material-icons text-primary">spa</span>
+          </div>
+          <h3 class="mt-6 text-xl font-semibold">Reiki Usui Nivel I &amp; II</h3>
+          <p class="mt-3 text-sm text-slate-600">Base energética para canalización y armonización integral.</p>
+        </article>
+        <article class="w-full shrink-0 rounded-3xl border border-primary/10 bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Diplomado</span>
+            <span class="material-icons text-primary">self_improvement</span>
+          </div>
+          <h3 class="mt-6 text-xl font-semibold">Reflexología facial y corporal</h3>
+          <p class="mt-3 text-sm text-slate-600">Mapa de puntos reflejos para estimular procesos internos.</p>
+        </article>
+        <article class="w-full shrink-0 rounded-3xl border border-primary/10 bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Especialización</span>
+            <span class="material-icons text-primary">psychology</span>
+          </div>
+          <h3 class="mt-6 text-xl font-semibold">Rejuvenecimiento manual integrativo</h3>
+          <p class="mt-3 text-sm text-slate-600">Técnicas avanzadas de lifting, drenaje y armonización facial.</p>
+        </article>
+      </div>
+      <button
+        type="button"
+        class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-primary shadow-lg transition hover:scale-105"
+        aria-label="Anterior"
+        data-carousel-prev
+      >
+        <span class="material-icons">chevron_left</span>
+      </button>
+      <button
+        type="button"
+        class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-primary shadow-lg transition hover:scale-105"
+        aria-label="Siguiente"
+        data-carousel-next
+      >
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const carousel = document.querySelector("[data-carousel]");
+
+  if (carousel) {
+    const track = carousel.querySelector("[data-carousel-track]");
+    const prevButton = carousel.querySelector("[data-carousel-prev]");
+    const nextButton = carousel.querySelector("[data-carousel-next]");
+
+    if (track) {
+      const originals = Array.from(track.querySelectorAll("[data-carousel-item]"));
+
+      if (originals.length > 1) {
+        const headClones = originals.map((item) => item.cloneNode(true));
+        const tailClones = originals.map((item) => item.cloneNode(true));
+
+        headClones.reverse().forEach((clone) => {
+          clone.setAttribute("data-clone", "true");
+          track.prepend(clone);
+        });
+
+        tailClones.forEach((clone) => {
+          clone.setAttribute("data-clone", "true");
+          track.append(clone);
+        });
+
+        const total = originals.length;
+        let index = total;
+        let intervalId = 0;
+        let isAnimating = false;
+
+        const getGap = () => parseFloat(getComputedStyle(track).gap || "0");
+        const getItemWidth = () => originals[0].offsetWidth;
+
+        const moveTo = (nextIndex, { animate = true } = {}) => {
+          const gap = getGap();
+          const width = getItemWidth();
+          track.style.transition = animate ? "transform 700ms ease-in-out" : "none";
+          track.style.transform = `translateX(-${nextIndex * (width + gap)}px)`;
+          index = nextIndex;
+          if (!animate) {
+            requestAnimationFrame(() => {
+              track.style.transition = "transform 700ms ease-in-out";
+            });
+          }
+        };
+
+        const next = () => {
+          if (isAnimating) return;
+          isAnimating = true;
+          moveTo(index + 1);
+        };
+
+        const prev = () => {
+          if (isAnimating) return;
+          isAnimating = true;
+          moveTo(index - 1);
+        };
+
+        const startAuto = () => {
+          stopAuto();
+          intervalId = window.setInterval(next, 3500);
+        };
+
+        const stopAuto = () => {
+          if (intervalId) {
+            window.clearInterval(intervalId);
+          }
+        };
+
+        track.addEventListener("transitionend", () => {
+          if (index >= total * 2) {
+            moveTo(total, { animate: false });
+          } else if (index < total) {
+            moveTo(total * 2 - 1, { animate: false });
+          }
+          isAnimating = false;
+        });
+
+        moveTo(index, { animate: false });
+        startAuto();
+
+        window.addEventListener("resize", () => moveTo(index, { animate: false }));
+        carousel.addEventListener("mouseenter", stopAuto);
+        carousel.addEventListener("mouseleave", startAuto);
+        prevButton?.addEventListener("click", () => {
+          stopAuto();
+          prev();
+          startAuto();
+        });
+        nextButton?.addEventListener("click", () => {
+          stopAuto();
+          next();
+          startAuto();
+        });
+      }
+    }
+  }
+</script>

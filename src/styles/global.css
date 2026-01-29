@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--color-background: 230 244 249;
+	--color-background-alt: 232 220 203;
+	--color-primary: 91 140 90;
+	--color-secondary: 142 125 190;
+	--color-accent: 242 181 196;
+	--color-cta: 244 196 48;
+	--color-text: 46 46 46;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+@layer base {
+	body {
+		@apply bg-background text-text-main font-sans antialiased;
+	}
+}
+
+.timeline-line {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.timeline-line::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translateX(-50%);
+	width: 2px;
+	height: 100%;
+	background-color: rgb(var(--color-primary) / 0.3);
+}
