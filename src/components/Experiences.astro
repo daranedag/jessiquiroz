@@ -46,17 +46,17 @@
 
 <script>
   const initExperiencesCarousel = () => {
-    const carousel = document.querySelector('[data-carousel="experiencias"]');
+    const carousel = document.querySelector<HTMLElement>('[data-carousel="experiencias"]');
     if (!carousel) return;
 
-    const track = carousel.querySelector('[data-carousel-track]');
+    const track = carousel.querySelector<HTMLElement>('[data-carousel-track]');
     if (!track) return;
 
-    const originals = Array.from(track.querySelectorAll('[data-carousel-item]'));
+    const originals = Array.from(track.querySelectorAll<HTMLElement>('[data-carousel-item]'));
     if (originals.length <= 1) return;
 
-    const headClones = originals.map((item) => item.cloneNode(true));
-    const tailClones = originals.map((item) => item.cloneNode(true));
+    const headClones = originals.map((item) => item.cloneNode(true) as HTMLElement);
+    const tailClones = originals.map((item) => item.cloneNode(true) as HTMLElement);
 
     headClones.reverse().forEach((clone) => {
       clone.setAttribute('data-clone', 'true');
@@ -79,7 +79,7 @@
     const getGap = () => parseFloat(getComputedStyle(track).gap || '0');
     const getItemWidth = () => originals[0].offsetWidth;
 
-    const moveTo = (nextIndex, { animate = true } = {}) => {
+    const moveTo = (nextIndex: number, { animate = true }: { animate?: boolean } = {}) => {
       const gap = getGap();
       const width = getItemWidth();
       track.style.transition = animate ? 'transform 700ms ease-in-out' : 'none';
@@ -115,7 +115,7 @@
       }
     };
 
-    const updateDragPosition = (clientX) => {
+    const updateDragPosition = (clientX: number) => {
       const gap = getGap();
       const width = getItemWidth();
       const delta = clientX - startX;
@@ -123,7 +123,7 @@
       track.style.transform = `translateX(${currentTranslate + delta}px)`;
     };
 
-    const handleDragEnd = (clientX) => {
+    const handleDragEnd = (clientX: number) => {
       const gap = getGap();
       const width = getItemWidth();
       const delta = clientX - startX;
@@ -171,7 +171,7 @@
       updateDragPosition(event.clientX);
     });
 
-    const endDrag = (event) => {
+    const endDrag = (event: PointerEvent) => {
       if (!isDragging) return;
       isDragging = false;
       carousel.classList.remove('cursor-grabbing');
