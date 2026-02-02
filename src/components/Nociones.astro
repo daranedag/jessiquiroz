@@ -1,3 +1,19 @@
+---
+import { supabase } from "../db/supabase";
+
+const { data, error } = await supabase
+  .from("notion_items")
+  .select("id, icon, title, description")
+  .eq("is_published", true)
+  .order("sort_order", { ascending: true });
+
+const notionItems = data ?? [];
+
+if (error) {
+  console.error("Supabase notion_items error:", error);
+}
+---
+
 <section id="nociones" class="bg-background-alt/40 py-16">
   <div class="mx-auto max-w-7xl px-6">
     <div class="text-center">
@@ -9,36 +25,13 @@
     </div>
     <div class="relative mt-12 overflow-hidden select-none cursor-grab touch-pan-y" data-carousel="nociones">
       <div class="flex gap-8" data-carousel-track>
-        <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
-        <span class="material-icons text-primary">autorenew</span>
-        <h3 class="mt-4 text-lg font-semibold">Energía sutil</h3>
-        <p class="mt-2 text-sm text-slate-600">Canalización, limpieza y equilibrio de centros energéticos.</p>
-      </article>
-        <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
-        <span class="material-icons text-primary">face</span>
-        <h3 class="mt-4 text-lg font-semibold">Reflexología facial</h3>
-        <p class="mt-2 text-sm text-slate-600">Estimulación de puntos reflejos para activar procesos internos.</p>
-      </article>
-        <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
-        <span class="material-icons text-primary">spa</span>
-        <h3 class="mt-4 text-lg font-semibold">Ritual de cuidado</h3>
-        <p class="mt-2 text-sm text-slate-600">Masajes, aromas y respiración consciente para relajar y nutrir.</p>
-      </article>
-        <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
-        <span class="material-icons text-primary">self_improvement</span>
-        <h3 class="mt-4 text-lg font-semibold">Meditación guiada</h3>
-        <p class="mt-2 text-sm text-slate-600">Visualizaciones y anclajes para volver al centro.</p>
-      </article>
-        <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
-        <span class="material-icons text-primary">favorite</span>
-        <h3 class="mt-4 text-lg font-semibold">Bienestar emocional</h3>
-        <p class="mt-2 text-sm text-slate-600">Trabajo con emociones para sostener cambios internos reales.</p>
-      </article>
-        <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
-        <span class="material-icons text-primary">psychology</span>
-        <h3 class="mt-4 text-lg font-semibold">Consciencia corporal</h3>
-        <p class="mt-2 text-sm text-slate-600">Lectura del cuerpo y hábitos que favorecen la regeneración.</p>
-      </article>
+        {notionItems.map((item) => (
+          <article class="w-full shrink-0 rounded-3xl bg-white p-6 shadow-sm sm:w-1/2 lg:w-1/3" data-carousel-item>
+            <span class="material-icons text-primary">{item.icon}</span>
+            <h3 class="mt-4 text-lg font-semibold">{item.title}</h3>
+            <p class="mt-2 text-sm text-slate-600">{item.description}</p>
+          </article>
+        ))}
       </div>
     </div>
   </div>

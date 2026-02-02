@@ -1,3 +1,19 @@
+---
+import { supabase } from "../db/supabase";
+
+const { data, error } = await supabase
+  .from("testimonial_items")
+  .select("id, quote, person_name, person_role, initials")
+  .eq("is_published", true)
+  .order("sort_order", { ascending: true });
+
+const testimonialItems = data ?? [];
+
+if (error) {
+  console.error("Supabase testimonial_items error:", error);
+}
+---
+
 <section id="testimonios" class="bg-background-alt/60 py-16">
   <div class="mx-auto max-w-7xl px-6">
     <div class="text-center">
@@ -5,39 +21,21 @@
       <h2 class="font-display text-3xl text-text-main sm:text-4xl">Voces de pacientes</h2>
     </div>
     <div class="mt-12 grid gap-8 md:grid-cols-3">
-      <article class="relative rounded-3xl bg-white p-8 shadow-sm">
-        <span class="material-icons absolute -top-5 left-6 text-secondary text-4xl opacity-60">format_quote</span>
-        <p class="text-sm text-slate-600">“Sentí paz inmediata. Mi rostro se ve más fresco y mi energía cambió por completo.”</p>
-        <div class="mt-6 flex items-center gap-4">
-          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-white font-semibold">CL</div>
-          <div>
-            <h4 class="text-sm font-semibold">Carolina López</h4>
-            <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Diseñadora</p>
+      {testimonialItems.map((item) => (
+        <article class="relative rounded-3xl bg-white p-8 shadow-sm">
+          <span class="material-icons absolute -top-5 left-6 text-secondary text-4xl opacity-60">format_quote</span>
+          <p class="text-sm text-slate-600">“{item.quote}”</p>
+          <div class="mt-6 flex items-center gap-4">
+            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-white font-semibold">
+              {item.initials}
+            </div>
+            <div>
+              <h4 class="text-sm font-semibold">{item.person_name}</h4>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-500">{item.person_role}</p>
+            </div>
           </div>
-        </div>
-      </article>
-      <article class="relative rounded-3xl bg-white p-8 shadow-sm">
-        <span class="material-icons absolute -top-5 left-6 text-secondary text-4xl opacity-60">format_quote</span>
-        <p class="text-sm text-slate-600">“Las sesiones me ayudaron a dormir mejor y a liberar tensión en mandíbula y cuello.”</p>
-        <div class="mt-6 flex items-center gap-4">
-          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-white font-semibold">MR</div>
-          <div>
-            <h4 class="text-sm font-semibold">María Rojas</h4>
-            <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Terapeuta</p>
-          </div>
-        </div>
-      </article>
-      <article class="relative rounded-3xl bg-white p-8 shadow-sm">
-        <span class="material-icons absolute -top-5 left-6 text-secondary text-4xl opacity-60">format_quote</span>
-        <p class="text-sm text-slate-600">“La experiencia fue profunda y amorosa. Siento mi piel más luminosa.”</p>
-        <div class="mt-6 flex items-center gap-4">
-          <div class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-white font-semibold">PA</div>
-          <div>
-            <h4 class="text-sm font-semibold">Paula Araya</h4>
-            <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Emprendedora</p>
-          </div>
-        </div>
-      </article>
+        </article>
+      ))}
     </div>
   </div>
 </section>

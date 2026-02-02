@@ -1,3 +1,27 @@
+---
+import { supabase } from "../db/supabase";
+
+const { data, error } = await supabase
+  .from("reflection_items")
+  .select("id, category, title, front_text, back_text, tone")
+  .eq("is_published", true)
+  .order("sort_order", { ascending: true });
+
+const reflectionItems = data ?? [];
+
+const toneClasses: Record<string, string> = {
+  primary: "bg-primary/90 text-white",
+  secondary: "bg-secondary/90 text-white",
+  accent: "bg-accent/90 text-text-main",
+};
+
+const getToneClass = (tone?: string) => toneClasses[tone ?? ""] ?? toneClasses.primary;
+
+if (error) {
+  console.error("Supabase reflection_items error:", error);
+}
+---
+
 <section id="reflexiones" class="py-16">
   <div class="mx-auto max-w-7xl px-6">
     <div class="text-center">
@@ -6,36 +30,22 @@
       <p class="mt-4 text-sm text-slate-600">Mensajes breves que invitan a la calma y la transformación interior.</p>
     </div>
     <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <article class="group relative rounded-3xl bg-white p-6 shadow-sm transition [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
-        <div class="space-y-4 [backface-visibility:hidden]">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Respiración</p>
-          <h3 class="text-lg font-semibold">El cuerpo escucha tu calma</h3>
-          <p class="text-sm text-slate-600">Inhala profundo: cada respiración es un recordatorio de tu propia guía interior.</p>
-        </div>
-        <div class="absolute inset-0 flex items-center justify-center rounded-3xl bg-primary/90 p-6 text-center text-white [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <p class="text-sm">Respira 4 tiempos, suelta 6. Repite y siente cómo todo se alinea.</p>
-        </div>
-      </article>
-      <article class="group relative rounded-3xl bg-white p-6 shadow-sm transition [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
-        <div class="space-y-4 [backface-visibility:hidden]">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Energía</p>
-          <h3 class="text-lg font-semibold">Lo que sientes, se refleja</h3>
-          <p class="text-sm text-slate-600">Tu rostro es un espejo de tu bienestar emocional.</p>
-        </div>
-        <div class="absolute inset-0 flex items-center justify-center rounded-3xl bg-secondary/90 p-6 text-center text-white [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <p class="text-sm">Suelta tensiones con un masaje suave en sienes y mandíbula.</p>
-        </div>
-      </article>
-      <article class="group relative rounded-3xl bg-white p-6 shadow-sm transition [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
-        <div class="space-y-4 [backface-visibility:hidden]">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Ritual</p>
-          <h3 class="text-lg font-semibold">Tu piel recuerda el cuidado</h3>
-          <p class="text-sm text-slate-600">Un gesto diario puede reactivar tu luz interna.</p>
-        </div>
-        <div class="absolute inset-0 flex items-center justify-center rounded-3xl bg-accent/90 p-6 text-center text-text-main [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <p class="text-sm">Aplica tu aceite favorito con intención y agradece a tu cuerpo.</p>
-        </div>
-      </article>
+      {reflectionItems.map((item) => (
+        <article class="group relative rounded-3xl bg-white p-6 shadow-sm transition [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
+          <div class="space-y-4 [backface-visibility:hidden]">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-primary">{item.category}</p>
+            <h3 class="text-lg font-semibold">{item.title}</h3>
+            <p class="text-sm text-slate-600">{item.front_text}</p>
+          </div>
+          <div
+            class={`absolute inset-0 flex items-center justify-center rounded-3xl p-6 text-center [backface-visibility:hidden] [transform:rotateY(180deg)] ${getToneClass(
+              item.tone
+            )}`}
+          >
+            <p class="text-sm">{item.back_text}</p>
+          </div>
+        </article>
+      ))}
     </div>
   </div>
 </section>

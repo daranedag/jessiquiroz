@@ -1,3 +1,20 @@
+---
+import { supabase } from "../db/supabase";
+
+const { data, error } = await supabase
+  .from("timeline_items")
+  .select("id, year, title, description")
+  .eq("is_published", true)
+  .order("sort_order", { ascending: true })
+  .order("year", { ascending: true });
+
+const timelineItems = data ?? [];
+
+if (error) {
+  console.error("Supabase timeline_items error:", error);
+}
+---
+
 <section id="cronologia" class="bg-background-alt/60 py-16">
   <div class="mx-auto max-w-5xl px-6">
     <div class="text-center">
@@ -7,42 +24,21 @@
     </div>
     <div class="relative mt-16 space-y-12">
       <div class="timeline-line"></div>
-      <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div class="md:w-5/12"></div>
-        <div class="z-10 h-4 w-4 rounded-full bg-primary ring-8 ring-background-alt"></div>
-        <div class="rounded-2xl bg-white p-6 shadow-sm md:w-5/12">
-          <span class="text-primary font-bold">2012</span>
-          <h3 class="mt-2 text-lg font-bold">Formación inicial en Reiki</h3>
-          <p class="mt-2 text-sm text-slate-600">Inicia el camino energético con prácticas de respiración consciente y meditación guiada.</p>
+      {timelineItems.map((item, index) => (
+        <div
+          class={`relative flex flex-col gap-6 md:items-center md:justify-between ${
+            index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+          }`}
+        >
+          <div class="md:w-5/12"></div>
+          <div class="z-10 h-4 w-4 rounded-full bg-primary ring-8 ring-background-alt"></div>
+          <div class="rounded-2xl bg-white p-6 shadow-sm md:w-5/12">
+            <span class="text-primary font-bold">{item.year}</span>
+            <h3 class="mt-2 text-lg font-bold">{item.title}</h3>
+            <p class="mt-2 text-sm text-slate-600">{item.description}</p>
+          </div>
         </div>
-      </div>
-      <div class="relative flex flex-col gap-6 md:flex-row-reverse md:items-center md:justify-between">
-        <div class="md:w-5/12"></div>
-        <div class="z-10 h-4 w-4 rounded-full bg-primary ring-8 ring-background-alt"></div>
-        <div class="rounded-2xl bg-white p-6 shadow-sm md:w-5/12">
-          <span class="text-primary font-bold">2016</span>
-          <h3 class="mt-2 text-lg font-bold">Reflexología facial y terapias integrativas</h3>
-          <p class="mt-2 text-sm text-slate-600">Profundización en el vínculo entre rostro, emociones y salud integral.</p>
-        </div>
-      </div>
-      <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-        <div class="md:w-5/12"></div>
-        <div class="z-10 h-4 w-4 rounded-full bg-primary ring-8 ring-background-alt"></div>
-        <div class="rounded-2xl bg-white p-6 shadow-sm md:w-5/12">
-          <span class="text-primary font-bold">2020</span>
-          <h3 class="mt-2 text-lg font-bold">Apertura del estudio holístico</h3>
-          <p class="mt-2 text-sm text-slate-600">Integración de técnicas de rejuvenecimiento y sanación energética personalizada.</p>
-        </div>
-      </div>
-      <div class="relative flex flex-col gap-6 md:flex-row-reverse md:items-center md:justify-between">
-        <div class="md:w-5/12"></div>
-        <div class="z-10 h-4 w-4 rounded-full bg-primary ring-8 ring-background-alt"></div>
-        <div class="rounded-2xl bg-white p-6 shadow-sm md:w-5/12">
-          <span class="text-primary font-bold">2024</span>
-          <h3 class="mt-2 text-lg font-bold">Programas de mentoría y retiros</h3>
-          <p class="mt-2 text-sm text-slate-600">Acompañamiento profundo para transformación interna y bienestar sostenido.</p>
-        </div>
-      </div>
+      ))}
     </div>
   </div>
 </section>
